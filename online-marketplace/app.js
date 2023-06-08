@@ -128,9 +128,131 @@ app.delete('/api/users/:id', logRequest, (req, res) => {
     res.status(200).json(deletedUser);
 });
 
+// PRODUCT ENDPOINTS
+
+// Retrieve all products
+app.get('/api/products', logRequest, (req, res) => {
+    res.json(products);
+});
+
+// Create a new product
+app.post('/api/products', logRequest, validateProductRequiredFields, (req, res) => {
+    // const { title, description, price } = req.body;
+    const product = {
+        id: uuidv4(),
+        ...req.body,
+    };
+
+    products.push(product);
+    res.status(201).json(product);
+});
+
+
+// Retrieve a specific product
+app.get('/api/products/:id', logRequest, (req, res) => {
+    const product = products.find(product => product.id == req.params.id);
+
+    if (!product) {
+        return res.status(404).json({ error: 'Product not found' });
+    }
+
+    res.json(product);
+});
+
+// Update a specific product
+app.put('/api/products/:id', logRequest, validateProductRequiredFields, (req, res) => {
+    const productIndex = products.findIndex(product => product.id == req.params.id);
+
+    if (productIndex < 0) {
+        return res.status(404).json({ error: 'Product not found' });
+    }
+
+    const updatedProduct = {
+        ...products[productIndex],
+        ...req.body
+    };
+
+    products[productIndex] = updatedProduct;
+    res.json(updatedProduct);
+});
+
+// Delete a specific product
+app.delete('/api/products/:id', logRequest, (req, res) => {
+    const productIndex = products.findIndex(product => product.id == req.params.id);
+
+    if (productIndex === -1) {
+        return res.status(404).json({ error: 'User not found' });
+    }
+
+    const deletedProduct = products.splice(productIndex, 1)[0];
+    res.status(200).json(deletedProduct);
+});
+
+
+// ORDERS ENDPOINTS
+
+// Retrieve all orders
+app.get('/api/orders', logRequest, (req, res) => {
+    res.json(orders);
+});
+
+// Create a new order
+app.post('/api/orders', logRequest, validateOrderRequiredFields, (req, res) => {
+    // const { title, description, price } = req.body;
+    const order = {
+        id: uuidv4(),
+        ...req.body,
+    };
+
+    orders.push(order);
+    res.status(201).json(order);
+});
+
+
+// Retrieve a specific order
+app.get('/api/orders/:id', logRequest, (req, res) => {
+    const order = orders.find(order => order.id == req.params.id);
+
+    if (!order) {
+        return res.status(404).json({ error: 'order not found' });
+    }
+
+    res.json(order);
+});
+
+// Update a specific order
+app.put('/api/orders/:id', logRequest, validateOrderRequiredFields, (req, res) => {
+    const orderIndex = orders.findIndex(order => order.id == req.params.id);
+
+    if (orderIndex < 0) {
+        return res.status(404).json({ error: 'order not found' });
+    }
+
+    const updatedOrder = {
+        ...orders[orderIndex],
+        ...req.body
+    };
+
+    orders[orderIndex] = updatedOrder;
+    res.json(updatedOrder);
+});
+
+// Delete a specific order
+app.delete('/api/orders/:id', logRequest, (req, res) => {
+    const orderIndex = orders.findIndex(order => order.id == req.params.id);
+
+    if (orderIndex === -1) {
+        return res.status(404).json({ error: 'User not found' });
+    }
+
+    const deletedOrder = orders.splice(orderIndex, 1)[0];
+    res.status(200).json(deletedOrder);
+});
+
+
 // Start the server
-app.listen(3002, () => {
-    console.log('Server listening on port 3002');
+app.listen(3300, () => {
+    console.log('Server listening on port 3300');
 
     // Create a default user
     users.push({
